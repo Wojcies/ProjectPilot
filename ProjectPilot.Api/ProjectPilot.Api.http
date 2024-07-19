@@ -4,4 +4,7 @@ GET {{url}}
 
 ###
 
-GET {{url}}/weatherforecast
+GET {{url}}/projects
+
+###
+POST  {{url}}/projects

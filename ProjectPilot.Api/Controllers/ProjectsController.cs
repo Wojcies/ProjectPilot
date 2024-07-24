@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProjectPilot.Api.Models;
+using ProjectPilot.Api.Entities;
 using ProjectPilot.Api.Services;
 
 namespace ProjectPilot.Api.Controllers
@@ -14,8 +14,8 @@ namespace ProjectPilot.Api.Controllers
 		public ActionResult<IEnumerable<Project>> Get() => Ok(_projectService.GetAll());
 
 
-		[HttpGet(template: "{id:int}")]
-		public ActionResult<Project> Get(int id)
+		[HttpGet(template: "{id:Guid}")]
+		public ActionResult<Project> Get(Guid id)
 		{
 			var project = _projectService.GetById(id);
 			if (project is null)
@@ -31,7 +31,7 @@ namespace ProjectPilot.Api.Controllers
 		public ActionResult Post(Project project)
 		{
 			var id = _projectService.Create(project);
-			if(id is null)
+			if (id is null)
 			{
 				return BadRequest();
 			}
@@ -39,8 +39,9 @@ namespace ProjectPilot.Api.Controllers
 			return CreatedAtAction(nameof(Get), new { id = project.Id }, null);
 		}
 
-		[HttpPut(template: "{id:int}")]
-		public ActionResult Put(int id, Project project)
+
+		[HttpPut(template: "{id:guid}")]
+		public ActionResult Put(Guid id, Project project)
 		{
 			project.Id = id;
 			var result = _projectService.Update(project);
@@ -52,8 +53,9 @@ namespace ProjectPilot.Api.Controllers
 			return NotFound();
 		}
 
-		[HttpDelete(template: "{id:int}")]
-		public ActionResult Delete(int id)
+
+		[HttpDelete(template: "{id:guid}")]
+		public ActionResult Delete(Guid id)
 		{
 			var result = _projectService.Delete(id);
 			if (result)

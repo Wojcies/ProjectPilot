@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using ProjectPilot.Api.Models;
+﻿using ProjectPilot.Api.Entities;
 
 namespace ProjectPilot.Api.Services
 {
@@ -11,19 +10,15 @@ namespace ProjectPilot.Api.Services
 		public IEnumerable<Project> GetAll()
 			=> _projects;
 
-		public Project GetById(int id)
+		public Project GetById(Guid id)
 			=> _projects.SingleOrDefault(x => x.Id == id);
 
-		public int? Create(Project project)
+		public Guid? Create(Project project)
 		{
 			if (_projects.Any(x => x.Name == project.Name))
 			{
 				return default;
 			}
-
-			project.Id = _id;
-			project.CreatedAt = DateTime.UtcNow.Date;
-			_id++;
 
 			_projects.Add(project);
 
@@ -38,11 +33,17 @@ namespace ProjectPilot.Api.Services
 				return false;
 			}
 
-			existingProject.Deadline = project.Deadline;
+			existingProject.ChangeDeadline(project.Deadline);
+			
+			foreach(var employee in project.AssignedEmployees)
+			{
+				existingProject.AddEmployee(employee);
+			}
+
 			return true;
 		}
 
-		public bool Delete(int id)
+		public bool Delete(Guid id)
 		{
 			var existingProject = _projects.SingleOrDefault(x => x.Id == id);
 			if (existingProject is null)

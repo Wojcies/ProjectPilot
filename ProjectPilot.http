@@ -21,9 +21,12 @@ PUT  {{url}}/projects/1
 Content-Type: application/json
 
 {
-    "Name": "TestProject",
     "Deadline": "2024-07-26",
-    "Description": "This is a test project."
+    "AssignedEmployees": [
+            { "Id": 1, "Name": "Wojciech"},
+            { "Id": 2, "Name": "Ania"},
+            { "Id": 3, "Name": "Marcin"}
+        ]
 }
 
 ###
